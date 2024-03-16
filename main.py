@@ -57,6 +57,8 @@ jugador2 = Jugador("Jugador 2", 'círculo')
 
 datos_juego = DatosDelJuego(jugador1, jugador2, 3)
 
+#------------------------------------------------------------
+
 # Función para mostrar el menú principal
 def mostrar_menu_principal():
 
@@ -65,6 +67,7 @@ def mostrar_menu_principal():
         if opcion == "Jugar":
             root.destroy()  # Cerrar la ventana del menú principal
             mostrar_menu_pre_juego()
+
         elif opcion == "Salir":
             root.destroy()  # Cerrar la ventana y finalizar el programa
 
