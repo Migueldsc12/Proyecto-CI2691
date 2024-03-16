@@ -57,46 +57,74 @@ jugador2 = Jugador("Jugador 2", 'círculo')
 
 datos_juego = DatosDelJuego(jugador1, jugador2, 3)
 
-import tkinter as tk
-
+# Función para mostrar el menú principal
 def mostrar_menu_principal():
-    """
-    Funcion que muestra el menu principal del juego
-    """
 
-def mostrar_menu_principal():
-    # Función para iniciar el juego
-    def jugar():
-        print("Iniciar juego")
-
-    # Función para salir del programa
-    def salir():
-        print("Salir del juego")
-        root.destroy()
+    # Función para manejar la selección del usuario en el menú principal
+    def seleccionar_opcion(opcion):
+        if opcion == "Jugar":
+            root.destroy()  # Cerrar la ventana del menú principal
+            mostrar_menu_pre_juego()
+        elif opcion == "Salir":
+            root.destroy()  # Cerrar la ventana y finalizar el programa
 
     # Crear la ventana principal
     root = tk.Tk()
     root.title("Menú Principal")
 
-    # Establecer el tamaño de la ventana
-    root.geometry("300x200")  # Anchura x Altura
+    # Etiqueta para mostrar el título del menú
+    titulo_label = tk.Label(root, text="Menú Principal", font=("Helvetica", 18))
+    titulo_label.pack(pady=10)
 
-    # Botón para iniciar el juego
-    jugar_button = tk.Button(root, text="Jugar", command=jugar)
-    jugar_button.pack(pady=10)
+    # Botón para mostrar el menú pre-juego
+    mostrar_menu_pre_juego_button = tk.Button(root, text="Jugar", command=lambda: seleccionar_opcion("Jugar"))
+    mostrar_menu_pre_juego_button.pack()
 
     # Botón para salir del programa
-    salir_button = tk.Button(root, text="Salir", command=salir)
-    salir_button.pack(pady=10)
+    salir_button = tk.Button(root, text="Salir", command=lambda: seleccionar_opcion("Salir"))
+    salir_button.pack()
 
     # Ejecutar la ventana
     root.mainloop()
 
-# Ejemplo de uso
-mostrar_menu_principal()
+# Función para mostrar el menú pre-juego
+def mostrar_menu_pre_juego():
+
+    # Función para manejar la selección del usuario en el menú pre-juego
+    def seleccionar_opcion(opcion):
+        if opcion == "Regresar":
+            root.destroy()  # Cerrar la ventana del menú pre-juego
+            mostrar_menu_principal()  # Mostrar nuevamente el menú principal
+
+    # Crear la ventana del menú pre-juego
+    root = tk.Tk()
+    root.title("Menu Pre-Juego")
+
+    # Etiqueta para mostrar el título del menú pre-juego
+    titulo_label = tk.Label(root, text="Menu Pre-Juego", font=("Helvetica", 18))
+    titulo_label.pack(pady=10)
+
+    # Botón para regresar al menú principal
+    regresar_button = tk.Button(root, text="Regresar", command=lambda: seleccionar_opcion("Regresar"))
+    regresar_button.pack()
+
+    # Ejecutar la ventana
+    root.mainloop()
+
+# Función principal
+def main():
+    # Ejecutar el programa mostrando el menú principal
+    mostrar_menu_principal()
+
+# Llamada a la función main para iniciar el programa para ir probando
+main()
 
 
 
+
+
+
+#ESTRUCTURA DE CODIGO A SEGUIR
 
 # def main():
 """
