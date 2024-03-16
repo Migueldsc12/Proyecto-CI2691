@@ -13,38 +13,50 @@ Integrantes:
 # ESTRUCTURAS DE DATOS PRINCIPALES
 
 class Jugador:
-    def __init__(self, nombre: str, puntaje: int, ficha: str):
+    def __init__(self, nombre, ficha):
         self.nombre = nombre
-        self.puntaje = puntaje
+        self.puntaje = 0
         self.ficha = ficha
 
 class Casilla:
     def __init__(self):
-        self.estado = 'vacio'  # los posibles estados son 'vacio', 'cruz' y 'circulo'
+        self.estado = 'vacío'  # Puede ser 'vacío', 'cruz' o 'círculo'
 
-    def manejar_evento(self, evento):
-        # Aquí se manejarían los eventos relacionados a la casilla
-        pass
+    def colocar_ficha(self, ficha):
+        if self.estado == 'vacío':
+            self.estado = ficha
+            return True
+        else:
+            return False  # La casilla ya está ocupada
 
 class Tablero:
-    def __init__(self, N):
-        self.N = N
-        self.casillas = [[[Casilla() for _ in range(N)] for _ in range(N)] for _ in range(N)]
+    def __init__(self, dimension):
+        self.dimension = dimension
+        self.casillas = [[[Casilla() for _ in range(dimension)] for _ in range(dimension)] for _ in range(dimension)]
 
-    def verificar_estado(self):
-        # Aquí se verificaría el estado del tablero y las posibles líneas
-        pass
-
-    def actualizar_datos(self):
-        # Aquí se actualizarían los datos del juego
+    def verificar_lineas(self):
+        # Aquí se implementaría la lógica para verificar si hay líneas ganadoras en el tablero
         pass
 
 class DatosDelJuego:
-    def __init__(self, jugador1: Jugador, jugador2: Jugador, tablero: Tablero):
+    def __init__(self, jugador1, jugador2, dimension):
         self.jugador1 = jugador1
         self.jugador2 = jugador2
-        self.turno_actual = jugador1  # El jugador1 comienza
-        self.tablero = tablero
+        self.turno_actual = jugador1
+        self.tablero = Tablero(dimension)
+
+    def cambiar_turno(self):
+        if self.turno_actual == self.jugador1:
+            self.turno_actual = self.jugador2
+        else:
+            self.turno_actual = self.jugador1
+
+# Ejemplo de uso
+jugador1 = Jugador("Jugador 1", 'cruz')
+jugador2 = Jugador("Jugador 2", 'círculo')
+
+datos_juego = DatosDelJuego(jugador1, jugador2, 3)
+
 
 # def main():
 """
