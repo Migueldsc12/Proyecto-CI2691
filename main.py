@@ -90,6 +90,8 @@ def mostrar_menu_principal():
     # Ejecutar la ventana
     root.mainloop()
 
+#------------------------------------------------------------
+
 # Función para mostrar el menú pre-juego
 def mostrar_menu_pre_juego():
 
@@ -114,6 +116,8 @@ def mostrar_menu_pre_juego():
     # Ejecutar la ventana
     root.mainloop()
 
+#------------------------------------------------------------
+    
 # Función principal
 def main():
     # Ejecutar el programa mostrando el menú principal
