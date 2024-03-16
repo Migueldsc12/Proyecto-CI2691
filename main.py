@@ -57,6 +57,46 @@ jugador2 = Jugador("Jugador 2", 'círculo')
 
 datos_juego = DatosDelJuego(jugador1, jugador2, 3)
 
+import tkinter as tk
+
+def mostrar_menu_principal():
+    """
+    Funcion que muestra el menu principal del juego
+    """
+
+def mostrar_menu_principal():
+    # Función para iniciar el juego
+    def jugar():
+        print("Iniciar juego")
+
+    # Función para salir del programa
+    def salir():
+        print("Salir del juego")
+        root.destroy()
+
+    # Crear la ventana principal
+    root = tk.Tk()
+    root.title("Menú Principal")
+
+    # Establecer el tamaño de la ventana
+    root.geometry("300x200")  # Anchura x Altura
+
+    # Botón para iniciar el juego
+    jugar_button = tk.Button(root, text="Jugar", command=jugar)
+    jugar_button.pack(pady=10)
+
+    # Botón para salir del programa
+    salir_button = tk.Button(root, text="Salir", command=salir)
+    salir_button.pack(pady=10)
+
+    # Ejecutar la ventana
+    root.mainloop()
+
+# Ejemplo de uso
+mostrar_menu_principal()
+
+
+
 
 # def main():
 """
