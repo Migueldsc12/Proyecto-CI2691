@@ -32,7 +32,7 @@ class Casilla:
 class Tablero:
     def __init__(self, dimension):
         self.dimension = dimension
-        self.casillas = [[[Casilla() for _ in range(dimension)] for _ in range(dimension)] for _ in range(dimension)]
+        self.casillas = [[[Casilla() for _ in range(dimension)] for _ in range(dimension)]]
 
     def verificar_lineas(self):
         # Aquí se implementaría la lógica para verificar si hay líneas ganadoras en el tablero
@@ -51,84 +51,82 @@ class DatosDelJuego:
         else:
             self.turno_actual = self.jugador1
 
-# Ejemplo de uso
-jugador1 = Jugador("Jugador 1", 'cruz')
-jugador2 = Jugador("Jugador 2", 'círculo')
+#---------------------------------------------------------------------------------------------------------------------------
+# Función para inicializar el juego
+def inicializar_juego(nombre_jugador1, nombre_jugador2, longitud_tablero):
+    # Crear el tablero N x N
+    tablero = [[" " for _ in range(longitud_tablero)] for _ in range(longitud_tablero)]
 
-datos_juego = DatosDelJuego(jugador1, jugador2, 3)
+    # Inicializar los datos de los jugadores
+    jugador1 = {"nombre": nombre_jugador1, "turno": 1, "ficha": "X", "puntuacion": 0}
+    jugador2 = {"nombre": nombre_jugador2, "turno": 2, "ficha": "O", "puntuacion": 0}
 
-#------------------------------------------------------------
+    # Retornar el tablero y los datos de los jugadores
+    return tablero, jugador1, jugador2
 
-# Función para mostrar el menú principal
-def mostrar_menu_principal():
-
-    # Función para manejar la selección del usuario en el menú principal
-    def seleccionar_opcion(opcion):
-        if opcion == "Jugar":
-            root.destroy()  # Cerrar la ventana del menú principal
-            mostrar_menu_pre_juego()
-
-        elif opcion == "Salir":
-            root.destroy()  # Cerrar la ventana y finalizar el programa
-
-    # Crear la ventana principal
-    root = tk.Tk()
-    root.title("Menú Principal")
-
-    # Etiqueta para mostrar el título del menú
-    titulo_label = tk.Label(root, text="Menú Principal", font=("Helvetica", 18))
-    titulo_label.pack(pady=10)
-
-    # Botón para mostrar el menú pre-juego
-    mostrar_menu_pre_juego_button = tk.Button(root, text="Jugar", command=lambda: seleccionar_opcion("Jugar"))
-    mostrar_menu_pre_juego_button.pack()
-
-    # Botón para salir del programa
-    salir_button = tk.Button(root, text="Salir", command=lambda: seleccionar_opcion("Salir"))
-    salir_button.pack()
-
-    # Ejecutar la ventana
-    root.mainloop()
-
-#------------------------------------------------------------
-
-# Función para mostrar el menú pre-juego
-def mostrar_menu_pre_juego():
-
-    # Función para manejar la selección del usuario en el menú pre-juego
-    def seleccionar_opcion(opcion):
-        if opcion == "Regresar":
-            root.destroy()  # Cerrar la ventana del menú pre-juego
-            mostrar_menu_principal()  # Mostrar nuevamente el menú principal
-
-    # Crear la ventana del menú pre-juego
-    root = tk.Tk()
-    root.title("Menu Pre-Juego")
-
-    # Etiqueta para mostrar el título del menú pre-juego
-    titulo_label = tk.Label(root, text="Menu Pre-Juego", font=("Helvetica", 18))
-    titulo_label.pack(pady=10)
-
-    # Botón para regresar al menú principal
-    regresar_button = tk.Button(root, text="Regresar", command=lambda: seleccionar_opcion("Regresar"))
-    regresar_button.pack()
-
-    # Ejecutar la ventana
-    root.mainloop()
-
-#------------------------------------------------------------
-    
 # Función principal
 def main():
-    # Ejecutar el programa mostrando el menú principal
+    # Mostrar el menú principal
     mostrar_menu_principal()
 
-# Llamada a la función main para iniciar el programa para ir probando
-main()
+# Mostrar menú principal
+def mostrar_menu_principal():
+    root = tk.Tk()
+    root.title("N en Raya 3D")
+    root.geometry("400x200")
 
+    # Agregar botones para jugar y salir
+    jugar_button = tk.Button(root, text="Jugar", command=lambda: mostrar_menu_pre_juego(root))
+    salir_button = tk.Button(root, text="Salir", command=root.quit)
 
+    jugar_button.pack(pady=20)
+    salir_button.pack(pady=20)
 
+    root.mainloop()
 
+# Mostrar menú pre-juego
+def mostrar_menu_pre_juego(root):
+    root.destroy()  # Cerrar ventana anterior
+    root = tk.Tk()
+    root.title("Configuración de juego")
+    root.geometry("400x300")
+
+    # Agregar etiquetas y entradas para nombres de jugadores y longitud del tablero
+    jugador1_label = tk.Label(root, text="Nombre Jugador 1:")
+    jugador1_entry = tk.Entry(root)
+    jugador2_label = tk.Label(root, text="Nombre Jugador 2:")
+    jugador2_entry = tk.Entry(root)
+    longitud_label = tk.Label(root, text="Longitud del tablero:")
+    longitud_entry = tk.Entry(root)
+
+    jugador1_label.pack()
+    jugador1_entry.pack()
+    jugador2_label.pack()
+    jugador2_entry.pack()
+    longitud_label.pack()
+    longitud_entry.pack()
+
+    # Agregar botones para regresar e iniciar
+    regresar_button = tk.Button(root, text="Regresar", command=lambda: mostrar_menu_principal())
+    iniciar_button = tk.Button(root, text="Iniciar", command=lambda: seleccionar_opcion(jugador1_entry.get(), jugador2_entry.get(), longitud_entry.get(), root))
+
+    regresar_button.pack(pady=20)
+    iniciar_button.pack(pady=20)
+
+    root.mainloop()
+
+# Seleccionar opción
+def seleccionar_opcion(jugador1, jugador2, longitud_tablero, root):
+    tablero, jugador1_data, jugador2_data = inicializar_juego(jugador1, jugador2, int(longitud_tablero))
+    print("Juego iniciado con los siguientes datos:")
+    print("Jugador 1:", jugador1_data)
+    print("Jugador 2:", jugador2_data)
+    print("Tablero:", tablero)
+    root.destroy()
+
+# Iniciar programa
+if __name__ == "__main__":
+    main()
 
 
 #ESTRUCTURA DE CODIGO A SEGUIR
