@@ -1,5 +1,20 @@
+
+"""
+Cosas que faltan: aserciones, comentarios, tipos de variables
+"""
+
 import tkinter as tk
 from tkinter import messagebox
+
+"""
+Proyecto - CI2691 - N en Raya
+
+Integrantes:
+
+Miguel Salomon - 1910274
+Gabriel de Ornela - 1510377
+
+"""
 
 class Juego:
     def __init__(self, n, player1, player2):
