@@ -1,6 +1,6 @@
 
 """
-Cosas que faltan: aserciones, comentarios, tipos de variables
+Cosas que faltan: comentarios, tipos de variables
 """
 
 import tkinter as tk
@@ -18,6 +18,7 @@ Gabriel de Ornela - 1510377
 
 class Juego:
     def __init__(self, n, player1, player2):
+
         self.n = n
 
         self.board = [['' for _ in range(n)] for _ in range(n)]
@@ -87,7 +88,6 @@ class Juego:
         for i in range(self.n):
 
             for j in range(self.n):
-
                 self.canvas.create_rectangle(i*100, j*100, i*100+100, j*100+100, fill='white')
 
                 if self.board[i][j] != '':
@@ -148,6 +148,7 @@ class Juego:
 class VentanaInicio:
 
     def __init__(self):
+
         self.window = tk.Tk()
         self.window.title('Inicio del juego')
 
@@ -176,14 +177,26 @@ class VentanaInicio:
         menu_principal.window.mainloop()
 
     def inciciar_juego(self):
-
         player1 = self.player1_entry.get()
         player2 = self.player2_entry.get()
-        
-        board_size = int(self.board_size_entry.get())
-        
+
+        # Verificar que los nombres de los jugadores no sean iguales
+        if player1 == player2:
+            messagebox.showerror("Error", "Los nombres de los jugadores no pueden ser iguales")
+            return
+
+        try:
+            board_size = int(self.board_size_entry.get())
+        except ValueError:
+            messagebox.showerror("Error", "Las dimensiones del tablero deben ser un número")
+            return
+
+        # Verificar que las dimensiones del tablero sean > 2
+        if board_size <= 2:
+            messagebox.showerror("Error", "Las dimensiones del tablero deben ser mayores a 2")
+            return
+
         self.window.destroy()
-        
         game = Juego(board_size, player1, player2)
         game.jugar()
 
