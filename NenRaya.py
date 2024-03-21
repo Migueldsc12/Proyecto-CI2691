@@ -5,6 +5,7 @@ Cosas que faltan: comentarios, tipos de variables
 
 import tkinter as tk
 from tkinter import messagebox
+from typing import List
 
 """
 Proyecto - CI2691 - N en Raya
