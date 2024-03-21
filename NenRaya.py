@@ -85,14 +85,13 @@ class Juego:
         self.player2_label.config(text=f'{self.players["O"]}: {self.scores["O"]}')  # Dibujar el tablero inicialmente
 
     def dibujar_tablero(self):
-
         for i in range(self.n):
-
             for j in range(self.n):
                 self.canvas.create_rectangle(i*100, j*100, i*100+100, j*100+100, fill='white')
 
                 if self.board[i][j] != '':
-                    self.canvas.create_text(i*100+50, j*100+50, text=self.board[i][j], font=('Arial', 50))
+                    color = 'red' if self.board[i][j] == 'X' else 'blue'
+                    self.canvas.create_text(i*100+50, j*100+50, text=self.board[i][j], font=('Arial', 50), fill=color)
 
     def click(self, event):
 
@@ -171,7 +170,7 @@ class VentanaInicio:
         self.board_size_entry = tk.Entry(self.window)
         self.board_size_entry.pack()
         
-        tk.Button(self.window, text='Iniciar juego', command=self.inciciar_juego).pack()
+        tk.Button(self.window, text='Iniciar juego', command=self.iniciar_juego).pack()
         tk.Button(self.window, text='Regresar', command=self.volver_al_menu).pack()
 
     def volver_al_menu(self):
