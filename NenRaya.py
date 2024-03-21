@@ -187,6 +187,7 @@ class VentanaInicio:
             messagebox.showerror("Error", "Los nombres de los jugadores no pueden ser iguales")
             return
 
+        # Verificar que la dimensión del tablero sea un número
         try:
             board_size = int(self.board_size_entry.get())
         except ValueError:
@@ -206,7 +207,7 @@ class VentanaInicio:
 class MenuPrincipal:
 
     def __init__(self):
-        
+
         self.window = tk.Tk()
         self.window.title('Menú Principal')
         self.window.geometry('500x500')
