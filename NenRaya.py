@@ -141,6 +141,7 @@ class Juego:
         return not self.procesar_tablero()
 
     def jugar(self):
+
         self.canvas.bind('<Button-1>', self.click)
         self.window.mainloop()
 
@@ -177,6 +178,7 @@ class VentanaInicio:
         menu_principal.window.mainloop()
 
     def inciciar_juego(self):
+
         player1 = self.player1_entry.get()
         player2 = self.player2_entry.get()
 
@@ -204,6 +206,7 @@ class VentanaInicio:
 class MenuPrincipal:
 
     def __init__(self):
+        
         self.window = tk.Tk()
         self.window.title('Menú Principal')
         self.window.geometry('500x500')
