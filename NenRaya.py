@@ -95,6 +95,7 @@ class Juego:
                     self.canvas.create_text(i*100+50, j*100+50, text=self.board[i][j], font=('Arial', 50))
 
     def click(self, event):
+
         x = event.x // 100
         y = event.y // 100
 
@@ -105,6 +106,7 @@ class Juego:
             if self.procesar_tablero():
                 self.scores[self.current_player] += 1
                 self.actualizar_puntaje()
+
                 messagebox.showinfo('Ganador', f'El jugador {self.players[self.current_player]} gana!')
                 self.reiniciar_juego()
 
@@ -178,7 +180,7 @@ class VentanaInicio:
         menu_principal = MenuPrincipal()
         menu_principal.window.mainloop()
 
-    def inciciar_juego(self):
+    def iniciar_juego(self):
 
         player1 = self.player1_entry.get()
         player2 = self.player2_entry.get()
