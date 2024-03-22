@@ -19,8 +19,24 @@ class Jugador:
         self.ficha = ficha
 
 class Casilla:
-    def __init__(self):
-        self.estado = 'vacío'  # Puede ser 'vacío', 'cruz' o 'círculo'
+    def __init__(self, lienzo: tk.Canvas, lado: int, x: int, y: int,i: int,j: int):
+        self.estado = 'X'  # Puede ser 'vacío', 'cruz' o 'círculo'
+        self.lienzo: tk.Canvas = lienzo
+        self.lado: int = lado
+        self.x: int = x
+        self.y: int = y
+        self.i: int = i
+        self.j: int = j
+        self.dibujar_casilla()
+
+    def dibujar_casilla(self):
+        self.celda = self.lienzo.create_rectangle(self.x,self.y,self.x+self.lado,self.y+self.lado, fill = "light grey")
+        #if empezo:
+        #    canvas.tag_bind(celda, "<Button-1>", lambda:self.colocar_ficha())
+        
+        #self.state = tk.Label(self.lienzo, text="X", font=("Arial",self.lado-15), background = "light grey")
+        #self.state.grid(row=self.i,column=self.j)
+
 
     def colocar_ficha(self, ficha):
         if self.estado == 'vacío':
@@ -30,10 +46,36 @@ class Casilla:
             return False  # La casilla ya está ocupada
 
 class Tablero:
-    def __init__(self, dimension):
+    def __init__(self, dimension, lienzo: tk.Canvas):
+        self.lienzo: tk.Canvas = lienzo
         self.dimension = dimension
-        self.casillas = [[[Casilla() for _ in range(dimension)] for _ in range(dimension)]]
+        #self.empezo_juego: bool = empezo
+        #if empezo:
+            
+        #else:
+        self.dibujar_tablero()
 
+    def dibujar_tablero(self):
+        y: int = 10
+        for i in range(self.dimension):
+            x: int = 30
+            for j in range(self.dimension):
+                kasilla: Casilla = Casilla(self.lienzo,30,x,y,i,j)
+                x+=35
+            y+=35
+
+            #Casilla(self.tabla,30,x,y) for _ in range(dimension)] for _ in range(dimension)]]
+        
+
+    #def dibujar_tablero(self):
+        
+        #for i in self.casillas:
+         #   x: int = 10
+          #  for j in i:
+           #     kasilla: Casilla = Casilla(lienzo,30,x,y)
+            #    x+=35
+            #y+=35
+            
     def verificar_lineas(self):
         # Aquí se implementaría la lógica para verificar si hay líneas ganadoras en el tablero
         pass
@@ -55,13 +97,32 @@ class DatosDelJuego:
 # Función para inicializar el juego
 def inicializar_juego(nombre_jugador1, nombre_jugador2, longitud_tablero):
     # Crear el tablero N x N
-    tablero = [[" " for _ in range(longitud_tablero)] for _ in range(longitud_tablero)]
+    root = tk.Tk()
+    root.title("Inicia el juego")
+    root.geometry("400x400")
+    lienzo = tk.Canvas(root, width=50*longitud_tablero, height=50*longitud_tablero)
+    
+    tablero: Tablero = Tablero(longitud_tablero,lienzo)
+    tablero=[[" " for _ in range(longitud_tablero)] for _ in range(longitud_tablero)]
 
     # Inicializar los datos de los jugadores
     jugador1 = {"nombre": nombre_jugador1, "turno": 1, "ficha": "X", "puntuacion": 0}
     jugador2 = {"nombre": nombre_jugador2, "turno": 2, "ficha": "O", "puntuacion": 0}
 
-    # Retornar el tablero y los datos de los jugadores
+    player1: Jugador = Jugador(nombre_jugador1,"X")
+    player2: Jugador = Jugador(nombre_jugador2,"O")
+
+    jugador1_label = tk.Label(root, text="Jugador 1: "+player1.nombre+"\nPuntaje: "+str(player1.puntaje))
+    jugador1_label.grid(row=0,column=0)
+    jugador2_label = tk.Label(root, text="Jugador 2: "+player2.nombre+"\nPuntaje: "+str(player2.puntaje))
+    jugador2_label.grid(row=0,column=2)
+
+
+    lienzo.grid(row=1,column=1)
+    ###Falta ponerle que al terminar juego se resetean los datos
+    terminar_button = tk.Button(root, text="Terminar Juego", command=lambda: [root.destroy(),mostrar_menu_principal()])
+    terminar_button.grid(row=2,column=1)
+    #Retornar el tablero y los datos de los jugadores
     return tablero, jugador1, jugador2
 
 # Función principal
@@ -144,6 +205,10 @@ def mostrar_menu_pre_juego(root):
 # Seleccionar opción
 def seleccionar_opcion(jugador1, jugador2, longitud_tablero, root):
     tablero, jugador1_data, jugador2_data = inicializar_juego(jugador1, jugador2, int(longitud_tablero))
+    #ganador: bool = False
+    #while !ganador:
+        
+            
     print("Juego iniciado con los siguientes datos:")
     print("Jugador 1:", jugador1_data)
     print("Jugador 2:", jugador2_data)
@@ -196,3 +261,4 @@ Funcion principal del juego
 #                 sumar_punto()
 #                 reiniciar_tablero()
 #                 intercambiar_turno()
+
