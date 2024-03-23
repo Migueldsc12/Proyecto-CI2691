@@ -39,11 +39,23 @@ class Juego:
         self.canvas = tk.Canvas(self.window, width=n*100, height=n*100, bg='white')
         self.canvas.pack()
 
-        self.player1_label = tk.Label(self.window, text=f'{player1}: {self.scores["X"]}')
-        self.player1_label.pack(side=tk.LEFT)
+        self.player1_frame = tk.Frame(self.window)
+        self.player1_frame.pack(side=tk.LEFT)
 
-        self.player2_label = tk.Label(self.window, text=f'{player2}: {self.scores["O"]}')
-        self.player2_label.pack(side=tk.RIGHT)
+        self.player1_label = tk.Label(self.player1_frame, text=f'{player1}')
+        self.player1_label.pack()
+
+        self.score1_puntaje = tk.Label(self.player1_frame, text=f'Puntaje: {self.scores["X"]}')
+        self.score1_puntaje.pack()
+
+        self.player2_frame = tk.Frame(self.window)
+        self.player2_frame.pack(side=tk.RIGHT)
+
+        self.player2_label = tk.Label(self.player2_frame, text=f'{player2}')
+        self.player2_label.pack()
+
+        self.score2_puntaje = tk.Label(self.player2_frame, text=f'Puntaje: {self.scores["O"]}')
+        self.score2_puntaje.pack()
 
         self.quit_button = tk.Button(self.window, text='Salir', command=self.volver_al_menu)
         self.quit_button.pack()
@@ -85,6 +97,7 @@ class Juego:
         self.player2_label.config(text=f'{self.players["O"]}: {self.scores["O"]}')  # Dibujar el tablero inicialmente
 
     def dibujar_tablero(self):
+
         for i in range(self.n):
             for j in range(self.n):
                 self.canvas.create_rectangle(i*100, j*100, i*100+100, j*100+100, fill='white')
@@ -109,7 +122,7 @@ class Juego:
                 messagebox.showinfo('Ganador', f'El jugador {self.players[self.current_player]} gana!')
                 self.reiniciar_juego()
 
-            elif self.check_draw():
+            elif self.empate():
                 messagebox.showinfo('Empate', 'El juego terminó en empate!')
                 self.reiniciar_juego()
 
@@ -121,15 +134,17 @@ class Juego:
 
         for i in range(self.n):
 
+            # Revisar si hay una fila o columna completa
             if all(self.board[i][j] == self.current_player for j in range(self.n)) or all(self.board[j][i] == self.current_player for j in range(self.n)):
                 return True
-            
+        
+        # Revisar si hay una diagonal completa
         if all(self.board[i][i] == self.current_player for i in range(self.n)) or all(self.board[i][self.n-i-1] == self.current_player for i in range(self.n)):
             return True
         
         return False
     
-    def check_draw(self):
+    def empate(self):
 
     # Comprueba si todas las celdas del tablero están llenas
         for row in self.board:
@@ -183,6 +198,11 @@ class VentanaInicio:
 
         player1 = self.player1_entry.get()
         player2 = self.player2_entry.get()
+
+        # Verificar que los nombres de los jugadores no estén vacíos
+        if not player1 or not player2:
+            messagebox.showerror("Error", "Los nombres de los jugadores no pueden estar vacíos")
+            return
 
         # Verificar que los nombres de los jugadores no sean iguales
         if player1 == player2:
