@@ -93,8 +93,10 @@ class Juego:
 
     def actualizar_puntaje(self):
 
-        self.player1_label.config(text=f'{self.players["X"]}: {self.scores["X"]}')
-        self.player2_label.config(text=f'{self.players["O"]}: {self.scores["O"]}')  # Dibujar el tablero inicialmente
+        self.player1_label.config(text=f'{self.players["X"]}')
+        self.player2_label.config(text=f'{self.players["O"]}')
+        self.score1_puntaje['text'] = f'Puntaje: {self.scores["X"]}'
+        self.score2_puntaje['text'] = f'Puntaje: {self.scores["O"]}'  # Dibujar el tablero inicialmente
 
     def dibujar_tablero(self):
 
