@@ -1,264 +1,268 @@
 import tkinter as tk
-import typing
+from tkinter import messagebox
+from typing import List
 
 """
-Proyecto CI-2691 N en raya 3D
+Proyecto - CI2691 - N en Raya
 
 Integrantes:
-- Miguel Salomon (19-10274)
-- Gabriel De Ornelas (15-10377) 
+
+Miguel Salomon - 1910274
+Gabriel de Ornelas - 1510377
 
 """
 
-# ESTRUCTURAS DE DATOS PRINCIPALES
+class Juego:
+    def __init__(self, n, player1, player2):
 
-class Jugador:
-    def __init__(self, nombre, ficha):
-        self.nombre = nombre
-        self.puntaje = 0
-        self.ficha = ficha
-
-class Casilla:
-    def __init__(self, lienzo: tk.Canvas, lado: int, x: int, y: int,i: int,j: int):
-        self.estado = 'X'  # Puede ser 'vacío', 'cruz' o 'círculo'
-        self.lienzo: tk.Canvas = lienzo
-        self.lado: int = lado
-        self.x: int = x
-        self.y: int = y
-        self.i: int = i
-        self.j: int = j
-        self.dibujar_casilla()
-
-    def dibujar_casilla(self):
-        self.celda = self.lienzo.create_rectangle(self.x,self.y,self.x+self.lado,self.y+self.lado, fill = "light grey")
-        #if empezo:
-        #    canvas.tag_bind(celda, "<Button-1>", lambda:self.colocar_ficha())
-        
-        #self.state = tk.Label(self.lienzo, text="X", font=("Arial",self.lado-15), background = "light grey")
-        #self.state.grid(row=self.i,column=self.j)
-
-
-    def colocar_ficha(self, ficha):
-        if self.estado == 'vacío':
-            self.estado = ficha
-            return True
+        self.n: int = n
+        if self.n>3:
+            self.size: int = 300//n
         else:
-            return False  # La casilla ya está ocupada
+            self.size: int = 100
 
-class Tablero:
-    def __init__(self, dimension, lienzo: tk.Canvas):
-        self.lienzo: tk.Canvas = lienzo
-        self.dimension = dimension
-        #self.empezo_juego: bool = empezo
-        #if empezo:
-            
-        #else:
+        self.board = [['' for _ in range(n)] for _ in range(n)]
+
+        self.players = { 'X': player1, 'O': player2 }
+
+        self.scores = { 'X': 0, 'O': 0 }
+
+        self.current_player = 'X'
+        
+        self.window = tk.Tk()
+        self.window.title('N en Raya')
+        self.window.geometry(str(n*self.size+200)+"x"+str(n*self.size+200))
+        self.window.configure(bg = "midnight blue")
+
+        self.current_player_label = tk.Label(self.window, text=f'Turno de {self.players[self.current_player]} ({self.current_player})', bg = "midnight blue", fg="white", font=("Stencil", 15))
+        self.current_player_label.pack(pady=10)
+
+        self.canvas = tk.Canvas(self.window, width=n*self.size, height=n*self.size, bg='white')
+        self.canvas.pack()
+
+        self.player1_frame = tk.Frame(self.window, bg = "midnight blue")
+        self.player1_frame.pack(side=tk.LEFT)
+
+        self.player1_label = tk.Label(self.player1_frame, text=f'{player1}',bg = "midnight blue", fg="white", font=("Stencil", 15))
+        self.player1_label.pack()
+
+        self.score1_puntaje = tk.Label(self.player1_frame, text=f'Puntaje: {self.scores["X"]}', bg = "midnight blue", fg="white", font=("Stencil", 15))
+        self.score1_puntaje.pack()
+
+        self.player2_frame = tk.Frame(self.window, bg = "midnight blue")
+        self.player2_frame.pack(side=tk.RIGHT)
+
+        self.player2_label = tk.Label(self.player2_frame, text=f'{player2}', bg = "midnight blue", fg="white", font=("Stencil", 15))
+        self.player2_label.pack()
+
+        self.score2_puntaje = tk.Label(self.player2_frame, text=f'Puntaje: {self.scores["O"]}', bg = "midnight blue", fg="white", font=("Stencil", 15))
+        self.score2_puntaje.pack()
+
+        self.quit_button = tk.Button(self.window, text='SALIR', font=("Bauhaus 93",13), bg="orange", borderwidth = 10, command=self.volver_al_menu)
+        self.quit_button.pack(pady=30,ipadx=30, ipady=1)
+
+        self.dibujar_tablero()  # Dibujar el tablero inicialmente
+        self.actualizar_puntaje()  # Actualizar los puntajes
+
+    def volver_al_menu(self):
+
+        self.window.destroy()
+        menu_principal = MenuPrincipal()
+        menu_principal.window.mainloop()
+
+    def reiniciar_juego(self):
+
+        self.board = [['' for _ in range(self.n)] for _ in range(self.n)]
+        self.current_player = 'X'
+
+        # Guarda los puntajes actuales
+        score_X = self.scores['X']
+        score_O = self.scores['O']
+
+        # Intercambia los nombres de los jugadores
+        self.players['X'], self.players['O'] = self.players['O'], self.players['X']
+
+        # Intercambia los puntajes
+        self.scores['X'] = score_O
+        self.scores['O'] = score_X
+
+        # Actualiza las etiquetas de los jugadores
+        self.current_player_label.config(text=f'Turno de {self.players[self.current_player]} ({self.current_player})')
+
         self.dibujar_tablero()
+        self.actualizar_puntaje() # Actualizar las etiquetas de los jugadores con los nuevos nombres
+
+    def actualizar_puntaje(self):
+
+        self.player1_label.config(text=f'{self.players["X"]}')
+        self.player2_label.config(text=f'{self.players["O"]}')
+        self.score1_puntaje['text'] = f'Puntaje: {self.scores["X"]}'
+        self.score2_puntaje['text'] = f'Puntaje: {self.scores["O"]}'  # Dibujar el tablero inicialmente
 
     def dibujar_tablero(self):
-        y: int = 10
-        for i in range(self.dimension):
-            x: int = 30
-            for j in range(self.dimension):
-                kasilla: Casilla = Casilla(self.lienzo,30,x,y,i,j)
-                x+=35
-            y+=35
 
-            #Casilla(self.tabla,30,x,y) for _ in range(dimension)] for _ in range(dimension)]]
-        
+        for i in range(self.n):
+            for j in range(self.n):
+                self.canvas.create_rectangle(i*self.size, j*self.size, i*self.size+self.size, j*self.size+self.size, fill='white')
 
-    #def dibujar_tablero(self):
+                if self.board[i][j] != '':
+                    color = 'red' if self.board[i][j] == 'X' else 'blue'
+                    self.canvas.create_text(i*self.size+self.size//2, j*self.size+self.size//2, text=self.board[i][j], font=('Arial', self.size//2), fill=color)
+
+    def click(self, event):
+
+        x = event.x // self.size
+        y = event.y // self.size
+
+        if self.board[x][y] == '':
+            self.board[x][y] = self.current_player
+            self.dibujar_tablero()
+
+            if self.procesar_tablero():
+                self.scores[self.current_player] += 1
+                self.actualizar_puntaje()
+
+                messagebox.showinfo('Ganador', f'El jugador {self.players[self.current_player]} gana!')
+                self.reiniciar_juego()
+
+            elif self.empate():
+                messagebox.showinfo('Empate', 'El juego terminó en empate!')
+                self.reiniciar_juego()
+
+            else:
+                self.current_player = 'O' if self.current_player == 'X' else 'X'
+                self.current_player_label.config(text=f'Turno de {self.players[self.current_player]} ({self.current_player})')
+
+    def procesar_tablero(self):
+
+        for i in range(self.n):
+
+            # Revisar si hay una fila o columna completa
+            if all(self.board[i][j] == self.current_player for j in range(self.n)) or all(self.board[j][i] == self.current_player for j in range(self.n)):
+                return True
         
-        #for i in self.casillas:
-         #   x: int = 10
-          #  for j in i:
-           #     kasilla: Casilla = Casilla(lienzo,30,x,y)
-            #    x+=35
-            #y+=35
+        # Revisar si hay una diagonal completa
+        if all(self.board[i][i] == self.current_player for i in range(self.n)) or all(self.board[i][self.n-i-1] == self.current_player for i in range(self.n)):
+            return True
+        
+        return False
+    
+    def empate(self):
+
+    # Comprueba si todas las celdas del tablero están llenas
+        for row in self.board:
+
+            for cell in row:
             
-    def verificar_lineas(self):
-        # Aquí se implementaría la lógica para verificar si hay líneas ganadoras en el tablero
-        pass
+                if cell == '':
+                    return False  # Si hay una celda vacía, no es un empate
 
-class DatosDelJuego:
-    def __init__(self, jugador1, jugador2, dimension):
-        self.jugador1 = jugador1
-        self.jugador2 = jugador2
-        self.turno_actual = jugador1
-        self.tablero = Tablero(dimension)
+        # Si todas las celdas están llenas y no hay un ganador, es un empate
+        return not self.procesar_tablero()
 
-    def cambiar_turno(self):
-        if self.turno_actual == self.jugador1:
-            self.turno_actual = self.jugador2
-        else:
-            self.turno_actual = self.jugador1
+    def jugar(self):
 
-#---------------------------------------------------------------------------------------------------------------------------
-# Función para inicializar el juego
-def inicializar_juego(nombre_jugador1, nombre_jugador2, longitud_tablero):
-    # Crear el tablero N x N
-    root = tk.Tk()
-    root.title("Inicia el juego")
-    root.geometry("400x400")
-    lienzo = tk.Canvas(root, width=50*longitud_tablero, height=50*longitud_tablero)
-    
-    tablero: Tablero = Tablero(longitud_tablero,lienzo)
-    tablero=[[" " for _ in range(longitud_tablero)] for _ in range(longitud_tablero)]
-
-    # Inicializar los datos de los jugadores
-    jugador1 = {"nombre": nombre_jugador1, "turno": 1, "ficha": "X", "puntuacion": 0}
-    jugador2 = {"nombre": nombre_jugador2, "turno": 2, "ficha": "O", "puntuacion": 0}
-
-    player1: Jugador = Jugador(nombre_jugador1,"X")
-    player2: Jugador = Jugador(nombre_jugador2,"O")
-
-    jugador1_label = tk.Label(root, text="Jugador 1: "+player1.nombre+"\nPuntaje: "+str(player1.puntaje))
-    jugador1_label.grid(row=0,column=0)
-    jugador2_label = tk.Label(root, text="Jugador 2: "+player2.nombre+"\nPuntaje: "+str(player2.puntaje))
-    jugador2_label.grid(row=0,column=2)
+        self.canvas.bind('<Button-1>', self.click)
+        self.window.mainloop()
 
 
-    lienzo.grid(row=1,column=1)
-    ###Falta ponerle que al terminar juego se resetean los datos
-    terminar_button = tk.Button(root, text="Terminar Juego", command=lambda: [root.destroy(),mostrar_menu_principal()])
-    terminar_button.grid(row=2,column=1)
-    #Retornar el tablero y los datos de los jugadores
-    return tablero, jugador1, jugador2
+class VentanaInicio:
 
-# Función principal
-def main():
-    # Mostrar el menú principal
-    mostrar_menu_principal()
+    def __init__(self):
 
-# Mostrar menú principal
-def mostrar_menu_principal():
-    root = tk.Tk()
-    root.title("N en Raya 3D")
-    root.geometry("400x200")
+        self.window = tk.Tk()
+        self.window.title('Inicio del juego')
 
-    # Agregar botones para jugar y salir
-    jugar_button = tk.Button(root, text="Jugar", command=lambda: [root.destroy(),mostrar_menu_pre_juego(root)])
-    salir_button = tk.Button(root, text="Salir", command=root.destroy)
+        # Establecer el tamaño de la ventana a 500x500
+        self.window.geometry('500x500')
+        self.window.configure(bg = "midnight blue")
 
-    jugar_button.pack(pady=20)
-    salir_button.pack(pady=20)
+        # Circulo en el fondo
+        self.lienzo=tk.Canvas(self.window,width=500,height=500,bg="midnight blue")
+        self.lienzo.place(x=0,y=0)
+        self.lienzo.create_oval(0,0,500,500, width = 50,outline="sky blue")
 
-    root.mainloop()
-
-def cambiar_size(size: tk.Label, x: int, pabajo: bool):
-    if pabajo:
-        if int(size.cget("text")) > 3:
-            size.configure(text=str(int(size.cget("text"))+x))
-    else:
-        size.configure(text=str(int(size.cget("text"))+x))
-
-def revision_de_nombres(jugador1_entry: tk.Entry, jugador2_entry: tk.Entry, root: tk.Tk, size: str, error_label: tk.Label):
-    if jugador1_entry.get() == jugador2_entry.get():
-        error_label.configure(text="Los nombres de los jugadores no pueden ser iguales.")
-    elif jugador1_entry.get() == "":
-        error_label.configure(text="Ingresa un nombre para el jugador 1.")
-    elif jugador2_entry.get() == "":
-        error_label.configure(text="Ingresa un nombre para el jugador 2.")
-    else:
-        seleccionar_opcion(jugador1_entry.get(), jugador2_entry.get(), size, root)
-    
-
-# Mostrar menú pre-juego
-def mostrar_menu_pre_juego(root):
-    root = tk.Tk()
-    root.title("Configuración de juego")
-    root.geometry("400x300")
-
-    # Agregar etiquetas y entradas para nombres de jugadores y longitud del tablero
-    jugador1_label = tk.Label(root, text="Nombre Jugador 1:")
-    jugador1_entry = tk.Entry(root)
-    jugador2_label = tk.Label(root, text="Nombre Jugador 2:")
-    jugador2_entry = tk.Entry(root)
-    longitud_label = tk.Label(root, text="Longitud del tablero:")
-    size_label = tk.Label(root, text="3", font= 14)
-    subir_size_button = tk.Button(root,text="↑", font=10, command=lambda: cambiar_size(size_label,1,False))
-    bajar_size_button = tk.Button(root,text="↓", font=10, command=lambda: cambiar_size(size_label,-1,True))
-    longitud_entry = tk.Entry(root)
-
-    jugador1_label.pack()
-    jugador1_entry.pack()
-    jugador2_label.pack()
-    jugador2_entry.pack()
-    longitud_label.pack()
-    subir_size_button.pack()
-    size_label.pack()
-    bajar_size_button.pack()
-
-    error_label = tk.Label(root, text="", font=20)
-    error_label.pack()
-    
-    # Agregar botones para regresar e iniciar
-    regresar_button = tk.Button(root, text="Regresar", command=lambda: [root.destroy(),mostrar_menu_principal()])
-    iniciar_button = tk.Button(root, text="Iniciar", command=lambda: revision_de_nombres(jugador1_entry,jugador2_entry, root ,size_label.cget("text"),error_label))
-
-    iniciar_button.pack(pady=10)
-    regresar_button.pack(pady=5)
-    
-
-    root.mainloop()
-
-# Seleccionar opción
-def seleccionar_opcion(jugador1, jugador2, longitud_tablero, root):
-    tablero, jugador1_data, jugador2_data = inicializar_juego(jugador1, jugador2, int(longitud_tablero))
-    #ganador: bool = False
-    #while !ganador:
+        tk.Label(self.window, text='INGRESE LOS DATOS DEL JUEGO', bg="midnight blue", fg="white", font=("bauhaus 93", 20)).pack(pady=30)
         
-            
-    print("Juego iniciado con los siguientes datos:")
-    print("Jugador 1:", jugador1_data)
-    print("Jugador 2:", jugador2_data)
-    print("Tablero:", tablero)
-    root.destroy()
-
-# Iniciar programa
-if __name__ == "__main__":
-    main()
-
-
-#ESTRUCTURA DE CODIGO A SEGUIR
-
-# def main():
-"""
-Funcion principal del juego
-"""
-
-#     salir = False
-
-#     while(True):
-#         mostrar_menu_principal()
-#         obtener_opcion_del_usuario()
-
-#         if(salir == True):
-#             salir()
-
-#         else:
-#             mostrar_menu_prejuego():
-#             obtener_opcion_del_usuario()
-
-#         if(obtener_opcion_del_usuario() == 2):
-#             regresar()
+        tk.Label(self.window, text='Nombre del Jugador 1:',bg="midnight blue", fg="green yellow", font=("Stencil", 15)).pack(pady=5)
+        self.player1_entry = tk.Entry(self.window, bg="sky blue", font=(15))
+        self.player1_entry.pack(pady=5)
         
-#         else:
-#             iniciar_juego()
+        tk.Label(self.window, text='Nombre del Jugador 2:', bg="midnight blue", fg="Orange", font=("Stencil", 15)).pack(pady=5)
+        self.player2_entry = tk.Entry(self.window, bg="sky blue", font=(15))
+        self.player2_entry.pack(pady=5)
+        
+        tk.Label(self.window, text='Dimensiones del tablero:', bg="Midnight blue", fg="white", font=("Stencil", 15)).pack(pady=5)
+        self.board_size_entry = tk.Entry(self.window, bg="sky blue", font=(15))
+        self.board_size_entry.pack(pady=5)
+        
+        tk.Button(self.window, text='INICIAR',font=("Bauhaus 93",10), bg="green yellow",borderwidth = 10, command=self.iniciar_juego).pack(pady=15,ipadx=50, ipady=5)
+        tk.Button(self.window, text='REGRESAR',font=("Bauhaus 93",10), bg="orange",borderwidth = 10, command=self.volver_al_menu).pack(ipadx=43, ipady=5)
 
-#         while(True):
-#             mostrar_tablero()
-#             obtener_accion_del_usuario()
+    def volver_al_menu(self):
+        
+        self.window.destroy()
+        menu_principal = MenuPrincipal()
+        menu_principal.window.mainloop()
 
-#             if(obtener_accion_del_usuario() == 2):
-#                 break
+    def iniciar_juego(self):
 
-#             llenar_casilla()
+        player1 = self.player1_entry.get()
+        player2 = self.player2_entry.get()
 
-#             procesar_tablero()
+        # Verificar que los nombres de los jugadores no estén vacíos
+        if not player1 or not player2:
+            messagebox.showerror("Error", "Los nombres de los jugadores no pueden estar vacíos")
+            return
 
-#             if(hay_linea()):
-#                 sumar_punto()
-#                 reiniciar_tablero()
-#                 intercambiar_turno()
+        # Verificar que los nombres de los jugadores no sean iguales
+        if player1 == player2:
+            messagebox.showerror("Error", "Los nombres de los jugadores no pueden ser iguales")
+            return
 
+        # Verificar que la dimensión del tablero sea un número
+        try:
+            board_size = int(self.board_size_entry.get())
+        except ValueError:
+            messagebox.showerror("Error", "Las dimensiones del tablero deben ser un número")
+            return
+
+        # Verificar que las dimensiones del tablero sean > 2
+        if board_size <= 2:
+            messagebox.showerror("Error", "Las dimensiones del tablero deben ser mayores a 2")
+            return
+
+        self.window.destroy()
+        game = Juego(board_size, player1, player2)
+        game.jugar()
+
+
+class MenuPrincipal:
+
+    def __init__(self):
+
+        self.window = tk.Tk()
+        self.window.title('Menú Principal')
+        self.window.geometry('500x500')
+        self.window.configure(bg = "midnight blue")
+
+        #Cruz en el fondo
+        self.lienzo=tk.Canvas(self.window,width=500,height=500,bg="midnight blue")
+        self.lienzo.place(x=0,y=0)
+        self.lienzo.create_line(0,0,500,500, width = 50,fill="sky blue")
+        self.lienzo.create_line(0,500,500,0, width = 50,fill="sky blue")
+
+        tk.Label(self.window, text='¡N EN RAYA 2D!', bg="midnight blue", fg="white", font=("Bauhaus 93", 40)).pack(pady=35)
+        tk.Button(self.window, text='JUGAR', font=("Bauhaus 93",18), bg="green yellow",borderwidth = 10, command=self.abrir_ventana_inicio).pack(pady=18,ipadx=50, ipady=10)
+        tk.Button(self.window, text='SALIR', font=("Bauhaus 93",18), bg="orange", borderwidth = 10, command=self.window.destroy).pack(pady= 5, ipadx=53, ipady=10)
+
+    def abrir_ventana_inicio(self):
+
+        self.window.destroy()
+        ventana_inicio = VentanaInicio()
+        ventana_inicio.window.mainloop()
+
+
+# Crear y ejecutar la ventana de menú principal
+menu_principal = MenuPrincipal()
+menu_principal.window.mainloop()
