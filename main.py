@@ -1,8 +1,3 @@
-
-"""
-Cosas que faltan: comentarios, tipos de variables
-"""
-
 import tkinter as tk
 from tkinter import messagebox
 from typing import List
@@ -13,14 +8,18 @@ Proyecto - CI2691 - N en Raya
 Integrantes:
 
 Miguel Salomon - 1910274
-Gabriel de Ornela - 1510377
+Gabriel de Ornelas - 1510377
 
 """
 
 class Juego:
     def __init__(self, n, player1, player2):
 
-        self.n = n
+        self.n: int = n
+        if self.n>3:
+            self.size: int = 300//n
+        else:
+            self.size: int = 100
 
         self.board = [['' for _ in range(n)] for _ in range(n)]
 
@@ -32,33 +31,35 @@ class Juego:
         
         self.window = tk.Tk()
         self.window.title('N en Raya')
+        self.window.geometry(str(n*self.size+200)+"x"+str(n*self.size+200))
+        self.window.configure(bg = "midnight blue")
 
-        self.current_player_label = tk.Label(self.window, text=f'Turno de {self.players[self.current_player]} ({self.current_player})')
-        self.current_player_label.pack()
+        self.current_player_label = tk.Label(self.window, text=f'Turno de {self.players[self.current_player]} ({self.current_player})', bg = "midnight blue", fg="white", font=("Stencil", 15))
+        self.current_player_label.pack(pady=10)
 
-        self.canvas = tk.Canvas(self.window, width=n*100, height=n*100, bg='white')
+        self.canvas = tk.Canvas(self.window, width=n*self.size, height=n*self.size, bg='white')
         self.canvas.pack()
 
-        self.player1_frame = tk.Frame(self.window)
+        self.player1_frame = tk.Frame(self.window, bg = "midnight blue")
         self.player1_frame.pack(side=tk.LEFT)
 
-        self.player1_label = tk.Label(self.player1_frame, text=f'{player1}')
+        self.player1_label = tk.Label(self.player1_frame, text=f'{player1}',bg = "midnight blue", fg="white", font=("Stencil", 15))
         self.player1_label.pack()
 
-        self.score1_puntaje = tk.Label(self.player1_frame, text=f'Puntaje: {self.scores["X"]}')
+        self.score1_puntaje = tk.Label(self.player1_frame, text=f'Puntaje: {self.scores["X"]}', bg = "midnight blue", fg="white", font=("Stencil", 15))
         self.score1_puntaje.pack()
 
-        self.player2_frame = tk.Frame(self.window)
+        self.player2_frame = tk.Frame(self.window, bg = "midnight blue")
         self.player2_frame.pack(side=tk.RIGHT)
 
-        self.player2_label = tk.Label(self.player2_frame, text=f'{player2}')
+        self.player2_label = tk.Label(self.player2_frame, text=f'{player2}', bg = "midnight blue", fg="white", font=("Stencil", 15))
         self.player2_label.pack()
 
-        self.score2_puntaje = tk.Label(self.player2_frame, text=f'Puntaje: {self.scores["O"]}')
+        self.score2_puntaje = tk.Label(self.player2_frame, text=f'Puntaje: {self.scores["O"]}', bg = "midnight blue", fg="white", font=("Stencil", 15))
         self.score2_puntaje.pack()
 
-        self.quit_button = tk.Button(self.window, text='Salir', command=self.volver_al_menu)
-        self.quit_button.pack()
+        self.quit_button = tk.Button(self.window, text='SALIR', font=("Bauhaus 93",13), bg="orange", borderwidth = 10, command=self.volver_al_menu)
+        self.quit_button.pack(pady=30,ipadx=30, ipady=1)
 
         self.dibujar_tablero()  # Dibujar el tablero inicialmente
         self.actualizar_puntaje()  # Actualizar los puntajes
@@ -102,16 +103,16 @@ class Juego:
 
         for i in range(self.n):
             for j in range(self.n):
-                self.canvas.create_rectangle(i*100, j*100, i*100+100, j*100+100, fill='white')
+                self.canvas.create_rectangle(i*self.size, j*self.size, i*self.size+self.size, j*self.size+self.size, fill='white')
 
                 if self.board[i][j] != '':
                     color = 'red' if self.board[i][j] == 'X' else 'blue'
-                    self.canvas.create_text(i*100+50, j*100+50, text=self.board[i][j], font=('Arial', 50), fill=color)
+                    self.canvas.create_text(i*self.size+self.size//2, j*self.size+self.size//2, text=self.board[i][j], font=('Arial', self.size//2), fill=color)
 
     def click(self, event):
 
-        x = event.x // 100
-        y = event.y // 100
+        x = event.x // self.size
+        y = event.y // self.size
 
         if self.board[x][y] == '':
             self.board[x][y] = self.current_player
@@ -174,21 +175,29 @@ class VentanaInicio:
 
         # Establecer el tamaño de la ventana a 500x500
         self.window.geometry('500x500')
+        self.window.configure(bg = "midnight blue")
 
-        tk.Label(self.window, text='Nombre del Jugador 1:').pack()
-        self.player1_entry = tk.Entry(self.window)
-        self.player1_entry.pack()
+        # Circulo en el fondo
+        self.lienzo=tk.Canvas(self.window,width=500,height=500,bg="midnight blue")
+        self.lienzo.place(x=0,y=0)
+        self.lienzo.create_oval(0,0,500,500, width = 50,outline="sky blue")
+
+        tk.Label(self.window, text='INGRESE LOS DATOS DEL JUEGO', bg="midnight blue", fg="white", font=("bauhaus 93", 20)).pack(pady=30)
         
-        tk.Label(self.window, text='Nombre del Jugador 2:').pack()
-        self.player2_entry = tk.Entry(self.window)
-        self.player2_entry.pack()
+        tk.Label(self.window, text='Nombre del Jugador 1:',bg="midnight blue", fg="green yellow", font=("Stencil", 15)).pack(pady=5)
+        self.player1_entry = tk.Entry(self.window, bg="sky blue", font=(15))
+        self.player1_entry.pack(pady=5)
         
-        tk.Label(self.window, text='Dimensiones del tablero:').pack()
-        self.board_size_entry = tk.Entry(self.window)
-        self.board_size_entry.pack()
+        tk.Label(self.window, text='Nombre del Jugador 2:', bg="midnight blue", fg="Orange", font=("Stencil", 15)).pack(pady=5)
+        self.player2_entry = tk.Entry(self.window, bg="sky blue", font=(15))
+        self.player2_entry.pack(pady=5)
         
-        tk.Button(self.window, text='Iniciar juego', command=self.iniciar_juego).pack()
-        tk.Button(self.window, text='Regresar', command=self.volver_al_menu).pack()
+        tk.Label(self.window, text='Dimensiones del tablero:', bg="Midnight blue", fg="white", font=("Stencil", 15)).pack(pady=5)
+        self.board_size_entry = tk.Entry(self.window, bg="sky blue", font=(15))
+        self.board_size_entry.pack(pady=5)
+        
+        tk.Button(self.window, text='INICIAR',font=("Bauhaus 93",10), bg="green yellow",borderwidth = 10, command=self.iniciar_juego).pack(pady=15,ipadx=50, ipady=5)
+        tk.Button(self.window, text='REGRESAR',font=("Bauhaus 93",10), bg="orange",borderwidth = 10, command=self.volver_al_menu).pack(ipadx=43, ipady=5)
 
     def volver_al_menu(self):
         
@@ -235,10 +244,17 @@ class MenuPrincipal:
         self.window = tk.Tk()
         self.window.title('Menú Principal')
         self.window.geometry('500x500')
+        self.window.configure(bg = "midnight blue")
 
-        tk.Label(self.window, text='Bienvenido al juego!').pack()
-        tk.Button(self.window, text='Jugar', command=self.abrir_ventana_inicio).pack()
-        tk.Button(self.window, text='Salir', command=self.window.destroy).pack()
+        #Cruz en el fondo
+        self.lienzo=tk.Canvas(self.window,width=500,height=500,bg="midnight blue")
+        self.lienzo.place(x=0,y=0)
+        self.lienzo.create_line(0,0,500,500, width = 50,fill="sky blue")
+        self.lienzo.create_line(0,500,500,0, width = 50,fill="sky blue")
+
+        tk.Label(self.window, text='¡N EN RAYA 2D!', bg="midnight blue", fg="white", font=("Bauhaus 93", 40)).pack(pady=35)
+        tk.Button(self.window, text='JUGAR', font=("Bauhaus 93",18), bg="green yellow",borderwidth = 10, command=self.abrir_ventana_inicio).pack(pady=18,ipadx=50, ipady=10)
+        tk.Button(self.window, text='SALIR', font=("Bauhaus 93",18), bg="orange", borderwidth = 10, command=self.window.destroy).pack(pady= 5, ipadx=53, ipady=10)
 
     def abrir_ventana_inicio(self):
 
