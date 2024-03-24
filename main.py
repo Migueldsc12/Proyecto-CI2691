@@ -116,7 +116,6 @@ class Juego:
 
         return: None
         """
-
         self.player1_label.config(text=f'{self.players["X"]}')
         self.player2_label.config(text=f'{self.players["O"]}')
         self.score1_puntaje['text'] = f'Puntaje: {self.scores["X"]}'
@@ -130,7 +129,6 @@ class Juego:
 
         return: Nones
         """
-
         for i in range(self.n):
             for j in range(self.n):
                 self.canvas.create_rectangle(i*self.size, j*self.size, i*self.size+self.size, j*self.size+self.size, fill='white')
@@ -147,7 +145,6 @@ class Juego:
 
         return: None
         """
-
         x: int = event.x // self.size
         y: int = event.y // self.size
 
@@ -178,7 +175,6 @@ class Juego:
 
         return: bool
         """
-
         for i in range(self.n):
 
             # Revisar si hay una fila o columna completa
@@ -199,7 +195,6 @@ class Juego:
 
         return: bool
         """
-
     # Comprueba si todas las celdas del tablero están llenas
         for row in self.board:
 
@@ -219,7 +214,6 @@ class Juego:
 
         return: None
         """
-
         self.canvas.bind('<Button-1>', self.click)
         self.window.mainloop()
 
@@ -265,7 +259,6 @@ class VentanaInicio:
 
         return: None
         """
-        
         self.window.destroy()
         menu_principal = MenuPrincipal()
         menu_principal.window.mainloop()
@@ -278,7 +271,6 @@ class VentanaInicio:
 
         return: None
         """
-
         player1: str = self.player1_entry.get()
         player2: str = self.player2_entry.get()
 
@@ -336,7 +328,6 @@ class MenuPrincipal:
 
         return: None
         """
-
         self.window.destroy()
         ventana_inicio = VentanaInicio()
         ventana_inicio.window.mainloop()
