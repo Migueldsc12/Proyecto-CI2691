@@ -16,12 +16,14 @@ class Juego:
     def __init__(self, n, player1, player2):
 
         self.n: int = n
+        
         if self.n>3:
             self.size: int = 300//n
+        
         else:
             self.size: int = 100
 
-        self.board = [['' for _ in range(n)] for _ in range(n)]
+        self.board: List[List[int]] = [['' for _ in range(n)] for _ in range(n)]
 
         self.players = { 'X': player1, 'O': player2 }
 
@@ -64,20 +66,34 @@ class Juego:
         self.dibujar_tablero()  # Dibujar el tablero inicialmente
         self.actualizar_puntaje()  # Actualizar los puntajes
 
-    def volver_al_menu(self):
+    def volver_al_menu(self) -> None:
+        """
+        Función que cierra la ventana actual y abre la ventana del menú principal
+
+        args: None
+
+        return: None
+        """
 
         self.window.destroy()
         menu_principal = MenuPrincipal()
         menu_principal.window.mainloop()
 
-    def reiniciar_juego(self):
+    def reiniciar_juego(self) -> None:
+        """
+        Funcion que reinicia el juego, intercambiando los nombres de los jugadores y los puntajes
 
-        self.board = [['' for _ in range(self.n)] for _ in range(self.n)]
+        args: None
+
+        return: None
+        """
+
+        self.board: List[List[int]] = [['' for _ in range(self.n)] for _ in range(self.n)]
         self.current_player = 'X'
 
         # Guarda los puntajes actuales
-        score_X = self.scores['X']
-        score_O = self.scores['O']
+        score_X: int = self.scores['X']
+        score_O: int = self.scores['O']
 
         # Intercambia los nombres de los jugadores
         self.players['X'], self.players['O'] = self.players['O'], self.players['X']
@@ -92,14 +108,28 @@ class Juego:
         self.dibujar_tablero()
         self.actualizar_puntaje() # Actualizar las etiquetas de los jugadores con los nuevos nombres
 
-    def actualizar_puntaje(self):
+    def actualizar_puntaje(self) -> None:
+        """
+        Funcion que actualiza los puntajes de los jugadores en la ventana
+
+        args: None
+
+        return: None
+        """
 
         self.player1_label.config(text=f'{self.players["X"]}')
         self.player2_label.config(text=f'{self.players["O"]}')
         self.score1_puntaje['text'] = f'Puntaje: {self.scores["X"]}'
         self.score2_puntaje['text'] = f'Puntaje: {self.scores["O"]}'  # Dibujar el tablero inicialmente
 
-    def dibujar_tablero(self):
+    def dibujar_tablero(self) -> None:
+        """
+        Funcion que dibuja el tablero en la ventana
+
+        args: None
+
+        return: Nones
+        """
 
         for i in range(self.n):
             for j in range(self.n):
@@ -109,10 +139,17 @@ class Juego:
                     color = 'red' if self.board[i][j] == 'X' else 'blue'
                     self.canvas.create_text(i*self.size+self.size//2, j*self.size+self.size//2, text=self.board[i][j], font=('Arial', self.size//2), fill=color)
 
-    def click(self, event):
+    def click(self, event: tk.Event) -> None:
+        """
+        Funcion que se ejecuta al hacer click en una celda del tablero
 
-        x = event.x // self.size
-        y = event.y // self.size
+        args: event: tk.Event
+
+        return: None
+        """
+
+        x: int = event.x // self.size
+        y: int = event.y // self.size
 
         if self.board[x][y] == '':
             self.board[x][y] = self.current_player
@@ -133,7 +170,14 @@ class Juego:
                 self.current_player = 'O' if self.current_player == 'X' else 'X'
                 self.current_player_label.config(text=f'Turno de {self.players[self.current_player]} ({self.current_player})')
 
-    def procesar_tablero(self):
+    def procesar_tablero(self) -> bool:
+        """
+        Funcion que revisa si hay un ganador en el tablero
+
+        args: None
+
+        return: bool
+        """
 
         for i in range(self.n):
 
@@ -147,7 +191,14 @@ class Juego:
         
         return False
     
-    def empate(self):
+    def empate(self) -> bool:
+        """
+        Funcion que revisa si hay un empate en el tablero
+
+        args: None
+
+        return: bool
+        """
 
     # Comprueba si todas las celdas del tablero están llenas
         for row in self.board:
@@ -160,7 +211,14 @@ class Juego:
         # Si todas las celdas están llenas y no hay un ganador, es un empate
         return not self.procesar_tablero()
 
-    def jugar(self):
+    def jugar(self) -> None:
+        """
+        Funcion que inicia el juego
+
+        args: None
+
+        return: None
+        """
 
         self.canvas.bind('<Button-1>', self.click)
         self.window.mainloop()
@@ -199,16 +257,30 @@ class VentanaInicio:
         tk.Button(self.window, text='INICIAR',font=("Bauhaus 93",10), bg="green yellow",borderwidth = 10, command=self.iniciar_juego).pack(pady=15,ipadx=50, ipady=5)
         tk.Button(self.window, text='REGRESAR',font=("Bauhaus 93",10), bg="orange",borderwidth = 10, command=self.volver_al_menu).pack(ipadx=43, ipady=5)
 
-    def volver_al_menu(self):
+    def volver_al_menu(self) -> None:
+        """
+        Función que cierra la ventana actual y abre la ventana del menú principal
+
+        args: None
+
+        return: None
+        """
         
         self.window.destroy()
         menu_principal = MenuPrincipal()
         menu_principal.window.mainloop()
 
-    def iniciar_juego(self):
+    def iniciar_juego(self) -> None:
+        """
+        Función que inicia el juego con los datos ingresados por el usuario
 
-        player1 = self.player1_entry.get()
-        player2 = self.player2_entry.get()
+        args: None
+
+        return: None
+        """
+
+        player1: str = self.player1_entry.get()
+        player2: str = self.player2_entry.get()
 
         # Verificar que los nombres de los jugadores no estén vacíos
         if not player1 or not player2:
@@ -256,7 +328,14 @@ class MenuPrincipal:
         tk.Button(self.window, text='JUGAR', font=("Bauhaus 93",18), bg="green yellow",borderwidth = 10, command=self.abrir_ventana_inicio).pack(pady=18,ipadx=50, ipady=10)
         tk.Button(self.window, text='SALIR', font=("Bauhaus 93",18), bg="orange", borderwidth = 10, command=self.window.destroy).pack(pady= 5, ipadx=53, ipady=10)
 
-    def abrir_ventana_inicio(self):
+    def abrir_ventana_inicio(self) -> None:
+        """
+        Función que cierra la ventana actual y abre la ventana de inicio del juego
+
+        args: None
+
+        return: None
+        """
 
         self.window.destroy()
         ventana_inicio = VentanaInicio()
