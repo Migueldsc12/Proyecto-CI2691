@@ -74,7 +74,6 @@ class Juego:
 
         return: None
         """
-
         self.window.destroy()
         menu_principal = MenuPrincipal()
         menu_principal.window.mainloop()
@@ -87,7 +86,6 @@ class Juego:
 
         return: None
         """
-
         self.board: List[List[int]] = [['' for _ in range(self.n)] for _ in range(self.n)]
         self.current_player: str = 'X'
 
