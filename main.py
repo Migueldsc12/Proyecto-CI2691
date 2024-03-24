@@ -17,7 +17,7 @@ class Juego:
 
         self.n: int = n
         
-        if self.n>3:
+        if self.n > 3:
             self.size: int = 300//n
         
         else:
@@ -29,7 +29,7 @@ class Juego:
 
         self.scores = { 'X': 0, 'O': 0 }
 
-        self.current_player = 'X'
+        self.current_player: str = 'X'
         
         self.window = tk.Tk()
         self.window.title('N en Raya')
@@ -89,7 +89,7 @@ class Juego:
         """
 
         self.board: List[List[int]] = [['' for _ in range(self.n)] for _ in range(self.n)]
-        self.current_player = 'X'
+        self.current_player: str = 'X'
 
         # Guarda los puntajes actuales
         score_X: int = self.scores['X']
