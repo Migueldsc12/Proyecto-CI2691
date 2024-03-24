@@ -119,7 +119,7 @@ class Juego:
         self.player1_label.config(text=f'{self.players["X"]}')
         self.player2_label.config(text=f'{self.players["O"]}')
         self.score1_puntaje['text'] = f'Puntaje: {self.scores["X"]}'
-        self.score2_puntaje['text'] = f'Puntaje: {self.scores["O"]}'  # Dibujar el tablero inicialmente
+        self.score2_puntaje['text'] = f'Puntaje: {self.scores["O"]}'
 
     def dibujar_tablero(self) -> None:
         """
@@ -181,7 +181,7 @@ class Juego:
             if all(self.board[i][j] == self.current_player for j in range(self.n)) or all(self.board[j][i] == self.current_player for j in range(self.n)):
                 return True
         
-        # Revisar si hay una diagonal completa
+        # Revisar si hay una diagonal normal o invertida completa
         if all(self.board[i][i] == self.current_player for i in range(self.n)) or all(self.board[i][self.n-i-1] == self.current_player for i in range(self.n)):
             return True
         
