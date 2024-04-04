@@ -1,17 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from typing import List
-"""
-Agregué un boton que al presionarlo dice los integrantes just because xd
-Adapté el juego a NxNxN, con los tableros de NxN uno al lado del otro que se ajustan en tamaño para que no se salgan de la ventana.
-Agregué una funcion (procesamiento_de_tablero) con todas las verificaciones de la última jugada, es decir, que solo revise la fila, columna, y todas las 
-intertablero de la casilla que se acaba de marcar también revisa las diagonales del tablero correspondiente y las diagonales intertablero.
-Dejé el anterior (procesar_tablero) para que se revisara al final de la funcion "empate", aunque no pude probar una partida que terminara en empate.
 
-Un detalle que vi es que si haces click en el espacio que hay entre cada tablero NxN da un error de index out of range, no perturba el juego en absoluto y,
-de hecho era algo que ya pasaba en la 1era entrega (si haces click en el borde del lado derecho también da ese error), podría dejarse así.
-Podría crear una función que lo solucione, pero quería saber tu opinion.
-"""
 """
 Proyecto - CI2691 - N en Raya
 
@@ -189,45 +179,30 @@ class Juego:
         #Revisa si hay fila o culumna ganadora
         if all(self.board[z][x][k] == self.current_player for k in range(self.n)) or all(self.board[z][k][y] == self.current_player for k in range(self.n)):
             return True
+        
         #Revisa si hay diagonal o diagonal inversa ganadora
         if all(self.board[z][k][k] == self.current_player for k in range(self.n)) or all(self.board[z][k][self.n-k-1] == self.current_player for k in range(self.n)):
                 return True
+        
         #Revisa si hay victoria intertablero
         if all(self.board[k][x][y] == self.current_player for k in range(self.n)):
             return True
+        
         #Revisa si hay victoria de fila intertablero
         if all(self.board[k][x][k] == self.current_player for k in range(self.n)) or all(self.board[self.n-k-1][x][k] == self.current_player for k in range(self.n)):
             return True
+        
         #Revisa si hay victoria de columna intertablero
         if all(self.board[k][k][y] == self.current_player for k in range(self.n)) or all(self.board[self.n-k-1][k][y] == self.current_player for k in range(self.n)):
             return True
+        
         #Revisa si hay victoria de diagonal intertablero (desde [0][0][0] hasta [n-1][n-1][n-1] or desde [3][0][0] hasta [0][n-1][n-1])
         if all(self.board[k][k][k] == self.current_player for k in range(self.n)) or all(self.board[self.n-k-1][k][k] == self.current_player for k in range(self.n)):
             return True
+        
         #Revisa si hay victoria de diagonal inversa intertablero (desde [0][n-1][0] hasta [n-1][0][n-1] or desde [n-1][n-1][0] hasta [0][0][n-1])
         if all(self.board[k][self.n-k-1][k] == self.current_player for k in range(self.n)) or all(self.board[k][k][self.n-k-1] == self.current_player for k in range(self.n)):
             return True
-    
-    def procesar_tablero(self) -> bool:
-        """
-        Funcion que revisa si hay un ganador en el tablero
-
-        args: None
-
-        return: bool
-        """
-        for k in range(self.n): 
-            for i in range(self.n):
-                
-                # Revisar si hay una fila o columna completa
-                if all(self.board[k][i][j] == self.current_player for j in range(self.n)) or all(self.board[k][j][i] == self.current_player for j in range(self.n)):
-                    return True
-                
-            # Revisar si hay una diagonal normal o invertida completa
-            if all(self.board[k][i][i] == self.current_player for i in range(self.n)) or all(self.board[k][i][self.n-i-1] == self.current_player for i in range(self.n)):
-                return True
-            
-        return False
     
     def empate(self) -> bool:
         """
@@ -247,7 +222,7 @@ class Juego:
                         return False  # Si hay una celda vacía, no es un empate
 
         # Si todas las celdas están llenas y no hay un ganador, es un empate
-        return not self.procesar_tablero()
+        return not self.procesamiento_de_tablero()
 
     def jugar(self) -> None:
         """
