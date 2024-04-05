@@ -182,7 +182,7 @@ class Juego:
         
         #Revisa si hay diagonal o diagonal inversa ganadora
         if all(self.board[z][k][k] == self.current_player for k in range(self.n)) or all(self.board[z][k][self.n-k-1] == self.current_player for k in range(self.n)):
-                return True
+            return True
         
         #Revisa si hay victoria intertablero
         if all(self.board[k][x][y] == self.current_player for k in range(self.n)):
@@ -203,6 +203,7 @@ class Juego:
         #Revisa si hay victoria de diagonal inversa intertablero (desde [0][n-1][0] hasta [n-1][0][n-1] or desde [n-1][n-1][0] hasta [0][0][n-1])
         if all(self.board[k][self.n-k-1][k] == self.current_player for k in range(self.n)) or all(self.board[k][k][self.n-k-1] == self.current_player for k in range(self.n)):
             return True
+        return False
     
     def empate(self) -> bool:
         """
@@ -337,11 +338,14 @@ class MenuPrincipal:
         tk.Label(self.window, text='¡N EN RAYA 3D!', bg="midnight blue", fg="white", font=("Bauhaus 93", 40)).pack(pady=35)
         tk.Button(self.window, text='JUGAR', font=("Bauhaus 93",18), bg="green yellow",borderwidth = 10, command=self.abrir_ventana_inicio).pack(pady=18,ipadx=50, ipady=10)
         tk.Button(self.window, text='SALIR', font=("Bauhaus 93",18), bg="orange", borderwidth = 10, command=self.window.destroy).pack(pady= 5, ipadx=53, ipady=10)
-        tk.Button(self.window,text='INTEGRANTES', font=("Bauhaus 93",10),bg="white", borderwidth = 10, command=self.mostrar_integrantes).pack(pady=32)
-
-    def mostrar_integrantes(self):
-        tk.Label(self.window, text='Miguel Salomon - 1910274\nGabriel De Ornelas - 1510377', bg="midnight blue", fg="white", font=("Bauhaus 93", 10)).pack()
-        return
+        
+        # integrantes
+        nombres=tk.Label(self.window, text='INTEGRANTES', font=("Bauhaus 93",10), bg="white")
+        nombres.pack(pady=32)
+        names=tk.Label(self.window, text="", bg="midnight blue", fg="white", font=("Bauhaus 93", 10))
+        names.pack()
+        nombres.bind("<Enter>",lambda m :names.config(text="Miguel Salomon - 1910274\nGabriel De Ornelas - 1510377"))
+        nombres.bind("<Leave>",lambda m :names.config(text=""))
 
     def abrir_ventana_inicio(self) -> None:
         """
